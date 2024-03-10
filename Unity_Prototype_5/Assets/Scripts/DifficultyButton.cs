@@ -8,7 +8,7 @@ public class DifficultyButton : MonoBehaviour
     private Button button;
     private GameManager gameManager;
     public int difficulty;
-    void Start()
+     void Start()
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(SetDifficulty);

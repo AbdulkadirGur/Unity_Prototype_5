@@ -18,7 +18,7 @@ public class GameManagerX : MonoBehaviour
     private int score;
     private float spawnRate = 1.5f;
     public bool isGameActive;
-    public float timer = 10;
+    public float timer = 60f;
 
     private float spaceBetweenSquares = 2.5f; 
     private float minValueX = -3.75f; //  x value of the center of the left-most square
@@ -33,8 +33,12 @@ public class GameManagerX : MonoBehaviour
         score = 0;
         
         UpdateScore(0);
-        
+        StartCoroutine(UpdateTimer());
         titleScreen.SetActive(false);
+    }
+    public void Update()
+    {
+        
     }
 
     // While game is active spawn a random target
@@ -42,6 +46,7 @@ public class GameManagerX : MonoBehaviour
     {
         while (isGameActive)
         {
+         
             yield return new WaitForSeconds(spawnRate);
             int index = Random.Range(0, targetPrefabs.Count);
 
@@ -77,14 +82,32 @@ public class GameManagerX : MonoBehaviour
         scoreText.text = "Score:  " + score;
     }
 
-    
-    public void UpdateTime()
+    IEnumerator UpdateTimer()
     {
-        timer -= Time.deltaTime;
-        if(timer < 0)
-        {   timeText.text = "Time: "+ timer;
+        while (isGameActive && timer > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            timer--;
+            DisplayTime(timer);
+        }
+
+        if (timer <= 0)
+        {
             GameOver();
         }
+    }
+
+    void DisplayTime(float timeToDisplay)
+    {
+        if (timeToDisplay < 0)
+        {
+            timeToDisplay = 0;
+        }
+
+        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
+        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
+
+        timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
     // Stop game, bring up game over text and restart button
