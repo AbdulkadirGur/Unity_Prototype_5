@@ -9,7 +9,7 @@ public class Target : MonoBehaviour
     private float minSpeed = 12.0f;
     private float maxSpeed = 16.0f;
     private float maxTorque = 10.0f;
-    private float xRange = 4.0f;
+    private float xRange = 2.0f;
     private float ySpawnPos = -3.0f;
 
     public int pointValue;
@@ -34,7 +34,7 @@ public class Target : MonoBehaviour
         
     }
 
-    private void OnMouseDown()
+    /*private void OnMouseDown()
     {
         if(gameManager.isGameActive)
         {
@@ -43,14 +43,15 @@ public class Target : MonoBehaviour
             gameManager.UpdateScore(pointValue);
         }
         
-    }
+    }*/
 
     private void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
         if (!gameObject.CompareTag("Bad"))
         {
-            gameManager.GameOver();
+            //gameManager.GameOver();
+            gameManager.UpdateLives(-1);
         }
     }
 
@@ -67,6 +68,16 @@ public class Target : MonoBehaviour
     Vector3 RandomSpawnPos()
     {
         return new Vector3(Random.Range(-xRange, xRange), ySpawnPos);
+    }
+    public void DestroyTarget()
+    {
+        if (gameManager.isGameActive)
+        {
+            Destroy(gameObject);
+            Instantiate(explosionParticle, transform.position,
+            explosionParticle.transform.rotation);
+            gameManager.UpdateScore(pointValue);
+        }
     }
 
 }
